@@ -1,0 +1,78 @@
+{% extends "ams_app/base.html" %}
+{% block title %}Assignment Management System{% endblock %}
+{% block content%}
+{% block assignments %}{% endblock %}
+
+{% if submissions %}
+  <div class="body">
+    <div class="sub-body">
+      <div class="row">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="input-field col s8 input-search offset-s2">
+            <i class="material-icons right">search</i>
+            {{ search_form }}
+          </div>
+        </form>
+      </div>
+      <div class="pagination-div">
+        <ul class="pagination">
+          {% if submissions.has_previous %}
+            <li class="waves-effect"><a href="?page={{ assignments.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
+          {% else %}
+            <li class="disabled"><span><i class="material-icons">chevron_left</i></span></li>
+          {% endif %}
+          {% for i in submissions.paginator.page_range %}
+            {% if submissions.number == i %}
+              <li class=" waves-effect active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if submissions.has_next %}
+            <li class="waves-effect"><a href="?page={{ assignments.next_page_number }}"><i class="material-icons">chevron_right</i></a></li>
+          {% else %}
+            <li class="disabled"><span><i class="material-icons">chevron_right</i></span></li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="no-assignment">
+          <table class="striped responsive-table table">
+          <thead>
+            <tr>
+                <th>#</th>
+                <th>Matriculation number</th>
+                <th>Upload</th>
+                <th>Date submitted</th>
+                <th>Grade</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for submission in submissions %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td><a href="/submissions/{{ submission.id }}">{{ submission.matric_number }}</a></td>
+              <td>{{ submission.upload }}</td>
+              <td>{{ submission.submitted_at }}</td>
+              <td>{{ submission.grade}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div>
+
+{% else %}
+  <div class="body">
+    <div class="sub-body">
+      <div class="no-assignment">
+        <p> No submissions yet </p>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}
