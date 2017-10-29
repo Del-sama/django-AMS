@@ -3,21 +3,17 @@ import os
 import datetime
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import Group, User, Permission
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Q
 from django.contrib.postgres.search import SearchVector, SearchQuery
 
 from ams_app import forms
 from ams_app.models import Assignment, Submission, Profile
 
 
-# Create your views here.
 def sign_up(request):
     if request.method == "POST":
         user_form = forms.UserForm(request.POST)
@@ -32,8 +28,7 @@ def sign_up(request):
             user.profile.matric_number= profile_form.cleaned_data["matric_number"]
             user.save()
             messages.success(request, 'User was successfully created.')
-            # redirect to a new URL:
-            return HttpResponseRedirect('/')
+            return redirect('/')
         for error in user_form.errors.values() or  error in profile_form.errors.values():
             messages.error(request, error)
     user_form = forms.UserForm()
@@ -57,13 +52,13 @@ def login_user(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'User was successfully logged in.')
-                return HttpResponseRedirect('/dashboard')
+                return redirect('/dashboard')
             else:
                 messages.error(request, 'Username or password is incorrect')
         else:
             for error in form.errors.values():
                 messages.error(request, error)
-            return HttpResponseRedirect('/')
+            return redirect('/')
 
     login_form = forms.LoginForm()
     context = {
@@ -76,7 +71,7 @@ def login_user(request):
 def logout_user(request):
     logout(request)
     messages.success(request, 'User was successfully logged out.')
-    return HttpResponseRedirect('/')
+    return redirect('/')
 
 
 @login_required
@@ -97,14 +92,14 @@ def dashboard(request):
         except EmptyPage:
             assignments = paginator.page(paginator.num_pages)
 
-        if request.method == 'POST':
-            form = forms.AssignmentSearchForm(request.POST)
+        if request.method == 'GET':
+            form = forms.AssignmentSearchForm(request.GET)
 
             if form.is_valid():
-                assignment_query = request.POST['assignment_query']
+                q = request.GET['q']
                 assignments = assignment_list.annotate(
                     search=SearchVector('title', 'course_code', 'course_title'),
-                    ).filter(search=SearchQuery(assignment_query))
+                    ).filter(search=SearchQuery(q))
 
                 paginator = Paginator(assignments, 10)
                 page = request.GET.get('page')
@@ -142,14 +137,14 @@ def dashboard(request):
         except EmptyPage:
             submissions = paginator.page(paginator.num_pages)
 
-        if request.method == 'POST':
-            form = forms.SubmissionSearchForm(request.POST)
+        if request.method == 'GET':
+            form = forms.SubmissionSearchForm(request.GET)
 
             if form.is_valid():
-                submission_query = request.POST['submission_query']
+                q = request.GET['q']
                 submissions = submission_list.annotate(
                     search=SearchVector('matric_number'),
-                    ).filter(search=SearchQuery(submission_query))
+                    ).filter(search=SearchQuery(q))
 
                 paginator = Paginator(submissions, 10)
                 page = request.GET.get('page')
@@ -170,7 +165,6 @@ def dashboard(request):
             "submissions": submissions
         }
         return render(request, 'ams_app/students_dashboard.html', context=context)
-    
 
              
 @login_required
@@ -222,7 +216,6 @@ def assignment_submissions(request, id):
     user_id = request.user.id
     user = Profile.objects.get(user_id=user_id)
     assignment_id = id
-    # submission = Submission.objects.filter(assignment_id=assignment_id)
     if user.role == 'Lecturer':
         search_form = forms.SubmissionSearchForm()
         grade_form = forms.GradeForm()
@@ -250,10 +243,10 @@ def assignment_submissions(request, id):
             form = forms.SubmissionSearchForm(request.GET)
 
             if form.is_valid():
-                submission_query = request.GET['submission_query']
+                q = request.GET['q']
                 submissions = submission_list.annotate(
                     search=SearchVector('matric_number'),
-                    ).filter(search=SearchQuery(submission_query))
+                    ).filter(search=SearchQuery(q))
 
                 paginator = Paginator(submissions, 10)
                 page = request.GET.get('page')
@@ -277,7 +270,6 @@ def assignment_submissions(request, id):
                 "assignment_id": assignment_id
             }
         return render(request, 'ams_app/assignment-submissions.html', context=context)
-
 
 
 @login_required
@@ -324,7 +316,6 @@ def edit_assignment(request, id):
         "assignment_id": id
     }
     return render(request, "ams_app/assignment-edit.html", context=context)
-
 
 
 @login_required

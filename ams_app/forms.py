@@ -1,13 +1,14 @@
 from django.forms import ModelForm
 from ams_app import models
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django import forms
-
+ 
 
 class UserForm(ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
             'label': 'username'
         }))
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
@@ -22,6 +23,7 @@ CHOICES = (
    ('Lecturer', 'Lecturer'), 
    ('Student', 'Student'),
 )
+
 
 class ProfileForm(ModelForm):
     role = forms.ChoiceField(
@@ -77,17 +79,17 @@ class PassForm(forms.Form):
 
 
 class AssignmentSearchForm(forms.Form):
-    assignment_query = forms.CharField()
+    q = forms.CharField()
 
     class Meta:
-        fields = "assignment_query"
+        fields = "q"
 
 
 class SubmissionSearchForm(forms.Form):
-    submission_query = forms.CharField()
+    q = forms.CharField()
 
     class Meta:
-        fields = "submission_query"
+        fields = "q"
 
 
 class GradeForm(forms.Form):
