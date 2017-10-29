@@ -54,4 +54,4 @@ class Submission(models.Model):
         User,
         on_delete=models.CASCADE
     )
-    grade = models.CharField(max_length=100)
+    grade = models.CharField(max_length=100, blank=True, null=True)

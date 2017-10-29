@@ -270,3 +270,7 @@
   .nav {
     background-color: #502900;
   }
+
+  #signup form select {
+    display: block;
+  }

@@ -7,8 +7,7 @@
     <div class="body">
       <div class="sub-body">
         <div class="row">
-          <form method="POST">
-            {% csrf_token %}
+          <form method="GET">
             <div class="input-field col s8 offset-s2 input-search">
               <i class="material-icons right">search</i>
               {{ search_form }}
@@ -49,20 +48,43 @@
             </thead>
 
             <tbody>
-              {% for submission in submissions %}
+                {% for submission in submissions %}
                 <tr>
                   <td>{{ forloop.counter }}</td>
                   <td>{{ submission.matric_number }}</td>
                   <td>{{ submission.upload }}</td>
                   <td>{{ submission.submitted_at }}</td>
-                  <td>{{ submission.grade }}</td>
+                  <td>
+                    {% if submission.grade %}
+                      {{ submission.grade }}
+                    {% else %}
+                      <a class="modal-trigger" href="#modal-{{ submission.id }}">Grade</a>
+                      <!-- {{ grade_form }} -->
+                    {% endif %}
+                  </td>
                 </tr>
-              {% endfor %}
-            </tbody>
+                {% endfor %}
+              </tbody>
           </table>
         </div>
       </div>
     </div>
+    {% for submission in submissions %}
+      <!-- Modal Structure -->
+      <div id="modal-{{ submission.id }}" class="modal">
+        <div class="modal-content">
+          <h4>Grade Submission</h4>
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ grade_form }}
+            <button type="submit" name="submit-grade" value="{{ submission.id }}">Submit</button>
+          </form>
+        </div>
+        <!-- <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+        </div> -->
+      </div>
+    {% endfor %}
   {% else %}
     <div class="body">
       <div class="sub-body">
@@ -72,6 +94,7 @@
       </div>
     </div>
   {% endif %}
+           
 </div>
 
 {% endblock %}

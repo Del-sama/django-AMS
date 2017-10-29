@@ -185,7 +185,6 @@ def create_assignment(request):
                 assignment = form.save(commit=False)
                 assignment.user_id = request.user.id
                 assignment.save()
-
                 new_data = Assignment.objects.last()
                 messages.success(request, 'Assignment was successfully created.')
                 return redirect('/dashboard')
@@ -220,12 +219,15 @@ def assignment_detail(request, id):
 
 @login_required
 def assignment_submissions(request, id):
-    id = request.user.id
-    user = Profile.objects.get(user_id=id)
+    user_id = request.user.id
+    user = Profile.objects.get(user_id=user_id)
+    assignment_id = id
+    # submission = Submission.objects.filter(assignment_id=assignment_id)
     if user.role == 'Lecturer':
         search_form = forms.SubmissionSearchForm()
+        grade_form = forms.GradeForm()
         assignment = Assignment.objects.get(id=id)
-        submission_list = Submission.objects.filter(assignment_id=id)
+        submission_list = Submission.objects.filter(assignment_id=id).order_by('matric_number')
         paginator = Paginator(submission_list, 10)
         page = request.GET.get('page')
         try:
@@ -236,10 +238,19 @@ def assignment_submissions(request, id):
             submissions = paginator.page(paginator.num_pages)
 
         if request.method == 'POST':
-            form = forms.SubmissionSearchForm(request.POST)
+            form = forms.GradeForm(request.POST)
+            if form.is_valid():
+                grade = request.POST['grade']
+                submission_id = request.POST['submit-grade']
+                submission = Submission.objects.get(id=submission_id)
+                submission.grade = grade
+                submission.save()
+
+        if request.method == "GET":
+            form = forms.SubmissionSearchForm(request.GET)
 
             if form.is_valid():
-                submission_query = request.POST['submission_query']
+                submission_query = request.GET['submission_query']
                 submissions = submission_list.annotate(
                     search=SearchVector('matric_number'),
                     ).filter(search=SearchQuery(submission_query))
@@ -261,7 +272,9 @@ def assignment_submissions(request, id):
 
         context = {
                 "search_form": search_form,
-                "submissions": submissions
+                "submissions": submissions,
+                "grade_form": grade_form,
+                "assignment_id": assignment_id
             }
         return render(request, 'ams_app/assignment-submissions.html', context=context)
 

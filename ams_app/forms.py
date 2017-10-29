@@ -5,33 +5,48 @@ from django import forms
 
 
 class UserForm(ModelForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={
+            'label': 'username'
+        }))
     class Meta:
         model = User
-        fields = ['username', 'password', 'email']
+        fields = ['username', 'email', 'password']
         help_texts = {
             'username': '',
         }
+        widgets = {
+            'password' : forms.PasswordInput()
+        }
 
+CHOICES = (
+   ('Lecturer', 'Lecturer'), 
+   ('Student', 'Student'),
+)
 
 class ProfileForm(ModelForm):
+    role = forms.ChoiceField(
+        choices=CHOICES,
+        widget=forms.Select(attrs={'class':'form-control'}),
+        label='I am a...',
+    )
+    
     class Meta:
         model = models.Profile
-        fields = ('role', 'matric_number')
+        fields = ['role', 'matric_number']
 
-
+        
 class AssignmentForm(ModelForm):
     upload = forms.FileField(
         required=False,
         label='Select a file',
         help_text='max. 42 megabytes'
     )
-    due_date = forms.DateField()
+    due_date = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'datepicker'})
+    )
 
     class Meta:
         model = models.Assignment
-        widgets = {
-            'due_date': forms.DateInput(attrs={'class': 'datepicker'}),
-        }
         fields = ['title', 'upload', 'due_date', 'course_code', 'course_title']
 
 
@@ -45,7 +60,7 @@ class SubmissionForm(ModelForm):
 
 class LoginForm(forms.Form):
     username = forms.CharField()
-    password = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         fields = ['username', 'password']
@@ -73,3 +88,10 @@ class SubmissionSearchForm(forms.Form):
 
     class Meta:
         fields = "submission_query"
+
+
+class GradeForm(forms.Form):
+    grade = forms.CharField()
+
+    class Meta:
+        fields = ['grade']
