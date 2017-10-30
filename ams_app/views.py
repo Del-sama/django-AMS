@@ -15,9 +15,11 @@ from ams_app.models import Assignment, Submission, Profile
 
 
 def sign_up(request):
+    user_form = forms.UserForm
+    profile_form = forms.ProfileForm
     if request.method == "POST":
-        user_form = forms.UserForm(request.POST)
-        profile_form = forms.ProfileForm(request.POST)
+        user_form = user_form(request.POST)
+        profile_form = profile_form(request.POST)
         # check whether it's valid:
         if user_form.is_valid() and profile_form.is_valid():
             user = User.objects.create_user(
@@ -31,12 +33,10 @@ def sign_up(request):
             return redirect('/')
         for error in user_form.errors.values() or  error in profile_form.errors.values():
             messages.error(request, error)
-    user_form = forms.UserForm()
-    profile_form = forms.ProfileForm
     login_form = forms.LoginForm()
     context = {
-        "user_form": user_form,
-        "profile_form": profile_form,
+        "user_form": user_form(),
+        "profile_form": profile_form(),
         "login": login_form
     }
     return render(request, "ams_app/auth.html", context=context)

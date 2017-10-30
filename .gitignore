@@ -102,3 +102,4 @@ ENV/
 
 db.sqlite3
 uploads/
+auth.json
