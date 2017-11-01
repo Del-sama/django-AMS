@@ -72,7 +72,7 @@ class LoginForm(forms.Form):
 
 
 class PassForm(forms.Form):
-    passcode = forms.CharField(max_length=8)
+    passcode = forms.CharField()
 
     class Meta:
         fields = "passcode"
