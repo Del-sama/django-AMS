@@ -63,7 +63,7 @@
               <td>{{ assignment.due_date }}</td>
               <td>{{ assignment.course_code }}</td>
               <td>{{ assignment.course_title }}</td>
-              <td><a href="/assignments/{{ assignment.id }}/submissions">{{ assignment.submission_set.count }}</a></td>
+              <td><a href="/assignments/{{ assignment.id }}/submissions">{{ assignment.submissions.count }}</a></td>
             </tr>
             {% endfor %}
           </tbody>
@@ -93,7 +93,7 @@
       <h4>Create Assignment</h4>
       <div>
         <div class="modal-container">
-          <form method="POST" action="/assignments/add" enctype="multipart/form-data">
+          <form method="POST" action={% url 'add_assignment'%} enctype="multipart/form-data">
             {% csrf_token %}
                 <div class="row">
                   <div class="input-field col s12">

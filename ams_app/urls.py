@@ -18,7 +18,7 @@ from django.contrib.auth import views as auth_views
 from ams_app import views
 
 urlpatterns = [
-    url(r'^assignments/add$', views.create_assignment),
+    url(r'^assignments/add$', views.create_assignment, name='add_assignment'),
     url(r'^assignments/(?P<id>[-\w]+)/pass$', views.pre_submission,
         name='pre_submission'),
     url(r'^assignments/(?P<id>[-\w]+)/submission$', views.submit_assignment,
