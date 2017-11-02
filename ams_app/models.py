@@ -12,9 +12,9 @@ def unique_passcode():
 
 
 class Profile(models.Model):
-    lecturer_or_student = (('Lecturer', 'Lecturer'), ('Student', 'Student'))
+    role_choice = (('Lecturer', 'Lecturer'), ('Student', 'Student'))
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=100, choices=lecturer_or_student, default='Lecturer')
+    role = models.CharField(max_length=100, choices=role_choice, default='Lecturer')
     matric_number = models.CharField(max_length=12, unique=True, blank=True, null=True)
 
     @receiver(post_save, sender=User)
