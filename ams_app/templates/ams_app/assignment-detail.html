@@ -1,0 +1,104 @@
+{% extends "ams_app/base.html" %}
+{% block title %}Assignment Management System{% endblock %}
+{% block content%}
+
+<div class="container assignment-detail">
+  <div class="row single-assignment">
+    <div class="col s12">
+      <h4> {{ single_assignment.title }} </h4> </div>
+    <div class="col s12">
+       <p> Upload: {{ single_assignment.upload }} </p> </div>
+    <div class="col s12">
+      <p> Due Date: {{ single_assignment.due_date }} </p> </div>
+    <div class="col s12">
+      <p> Course Code: {{ single_assignment.course_code }} </p> </div>
+    <div class="col s12">
+      <p> Course Title: {{ single_assignment.course_title }} <p> </div>
+    <div class="col s12">
+      <p> Passcode: {{ single_assignment.passcode }} </p> </div>
+  </div>
+  <form method="POST" action={% url 'delete_assignment' id=assignment_id %}>
+    {% csrf_token %}
+    <div class="edit-delete">
+      <a class="waves-effect waves-light btn modal-trigger" href="#modal1"><i class="material-icons right">edit</i>Edit</a>
+      <button class="btn waves-effect waves-light btn-delete" type="submit" name="delete-assignment">Delete
+        <i class="material-icons right">delete</i>
+      </button>
+    </div>
+  </form>
+   <div>
+    <script>
+      {% if messages %}
+          {% for message in messages %}
+            {% if message.tags %}
+              {% if message.tags == "error" %}
+                Materialize.toast('{{ message }}', 2000, 'red');
+              {% else %}
+                Materialize.toast('{{ message }}', 2000, 'green');
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+      {% endif %}
+    </script>
+  </div>
+</div>
+<!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Edit Assignment</h4>
+      <div class="edit-modal">
+        <div class="modal-container">
+          <form method="POST" action="{% url 'edit_assignment' id=assignment_id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+                <div class="row">
+                  <div class="input-field col s12">
+                    {{ assignment.title }}
+                    <label for="id_title">Title</label>
+                  </div>
+                  <div class="input-field col s12">
+                    {{ assignment.course_title }}
+                    <label for="id_course_title">Course title</label>
+                  </div>
+                  <div class="input-field col s12">
+                    {{ assignment.course_code }}
+                    <label for="id_course_code">Course code</label>
+                  </div>
+                  <div class="col s12">
+                    {{ assignment.due_date }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="file-field input-field col s12">
+                    <div class="btn col s6">
+                      <span>File</span>
+                      {{ assignment.upload }}
+                    </div>
+                    <div class="file-path-wrapper col s6">
+                      <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                    </div>
+                  </div>
+                </div>
+                <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="edit-assignment">Edit assignment
+                  <i class="material-icons right">send</i>
+                </button>
+              </form>
+            </div>
+          <div>
+          <script>
+            {% if messages %}
+                {% for message in messages %}
+                  {% if message.tags %}
+                    {% if message.tags == "error" %}
+                      Materialize.toast('{{ message }}', 2000, 'red');
+                    {% else %}
+                      Materialize.toast('{{ message }}', 2000, 'green');
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+            {% endif %}
+          </script>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

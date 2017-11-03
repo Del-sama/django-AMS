@@ -1,0 +1,81 @@
+{% extends "ams_app/base.html" %}
+{% block title %}Assignment Management System{% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block content%}
+<div class="container auth-container">
+  <h4>Assignment Management System</h4>
+  <div class="signup-form">
+    <div class="row">
+      <div class="col s12 auth-tabs">
+        <ul class="tabs">
+          <li class="tab col s6"><a href="#signup">Sign up</a></li>
+          <li class="tab col s6"><a class="active" href="#login">Login</a></li>
+        </ul>
+      </div>
+      <div id="signup" class="col s12">
+        <form method="POST" action="/">
+          {% csrf_token %}
+          {{ user_form.as_p }}
+          {{ profile_form.as_p }}
+          <button class="btn waves-effect waves-light" type="submit" name="signup">Sign up
+            <i class="material-icons right">send</i>
+          </button>
+        </form>
+        <div>
+          <script>
+            {% if messages %}
+                {% for message in messages %}
+                  {% if message.tags %}
+                    {% if message.tags == "error" %}
+                      Materialize.toast('{{ message }}', 2000, 'red');
+                    {% else %}
+                      Materialize.toast('{{ message }}', 2000, 'green');
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+            {% endif %}
+          </script>
+        </div>
+      </div>
+      <div id="login" class="col s12">
+        <form method="POST" action="/login">
+          {% csrf_token %}
+          <div class="row auth-form">
+            <div class="input-field col s12">
+              {{ login.username }}
+              <label for="id_username">Username</label>
+            </div>
+            <div class="input-field col s12">
+              {{ login.password }}
+              <label for="id_password">Password</label>
+            </div>
+          </div>
+          <button class="btn waves-effect waves-light" type="submit" name="login">Log in
+            <i class="material-icons right">send</i>
+          </button>
+        </form>
+        <li class="signout">
+            <a href="/password_reset/"> <i class="fa fa-sign-out" aria-hidden="true"></i>Forgot password?</a>
+        </li>
+        <div>
+          <script>
+            {% if messages %}
+                {% for message in messages %}
+                  {% if message.tags %}
+                    {% if message.tags == "error" %}
+                      Materialize.toast('{{ message }}', 2000, 'red');
+                    {% else %}
+                      Materialize.toast('{{ message }}', 2000, 'green');
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+            {% endif %}
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

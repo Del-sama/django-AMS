@@ -1,0 +1,149 @@
+{% extends "ams_app/base.html" %}
+{% block title %}Assignment Management System{% endblock %}
+{% block content%}
+{% block assignments %}{% endblock %}
+
+{% if assignments %}
+  <div class="body">
+    <div class="sub-body">
+      <div class="row">
+        <div class="col s2">
+          <a class="btn-floating btn-large waves-effect waves-light red add-assignment modal-trigger" href="#modal1"><i class="material-icons">add</i></a>
+        </div>
+        <form method="GET">
+          <div class="input-field col s8 input-search">
+            <i class="material-icons right">search</i>
+            {{ search_form }}
+          </div>
+        </form>
+      </div>
+      <div class="pagination-div">
+        <ul class="pagination">
+          {% if assignments.has_previous %}
+            <li class="waves-effect"><a href="?page={{ assignments.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
+          {% else %}
+            <li class="disabled"><span><i class="material-icons">chevron_left</i></span></li>
+          {% endif %}
+          {% for i in assignments.paginator.page_range %}
+            {% if assignments.number == i %}
+              <li class=" waves-effect active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if assignments.has_next %}
+            <li class="waves-effect"><a href="?page={{ assignments.next_page_number }}"><i class="material-icons">chevron_right</i></a></li>
+          {% else %}
+            <li class="disabled"><span><i class="material-icons">chevron_right</i></span></li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="no-assignment">
+          <table class="striped responsive-table table">
+          <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Upload</th>
+                <th>Date Created</th>
+                <th>Due date</th>
+                <th>Course code</th>
+                <th>Course title</th>
+                <th>Submissions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for assignment in assignments %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td><a href="/assignments/{{ assignment.id }}">{{ assignment.title }}</a></td>
+              <td>{{ assignment.upload }}</td>
+              <td>{{ assignment.created_at }}</td>
+              <td>{{ assignment.due_date }}</td>
+              <td>{{ assignment.course_code }}</td>
+              <td>{{ assignment.course_title }}</td>
+              <td><a href="/assignments/{{ assignment.id }}/submissions">{{ assignment.submissions.count }}</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div>
+
+{% else %}
+  <div class="body">
+    <div class="sub-body">
+      <div class="row">
+        <div class="col s2">
+          <a class="btn-floating btn-large waves-effect waves-light red add-assignment modal-trigger" href="#modal1"><i class="material-icons">add</i></a>
+        </div>
+      <div class="no-assignment">
+        <p> No assignment created yet </p>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Create Assignment</h4>
+      <div>
+        <div class="modal-container">
+          <form method="POST" action={% url 'add_assignment'%} enctype="multipart/form-data">
+            {% csrf_token %}
+                <div class="row">
+                  <div class="input-field col s12">
+                    {{ assignment.title }}
+                    <label for="id_title">Title</label>
+                  </div>
+                  <div class="input-field col s12">
+                    {{ assignment.course_title }}
+                    <label for="id_course_title">Course title</label>
+                  </div>
+                  <div class="input-field col s12">
+                    {{ assignment.course_code }}
+                    <label for="id_course_code">Course code</label>
+                  </div>
+                  <div class="col s12">
+                    {{ assignment.due_date }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="file-field input-field col s12">
+                    <div class="btn col s6">
+                      <span>File</span>
+                      {{ assignment.upload }}
+                    </div>
+                    <div class="file-path-wrapper col s6">
+                      <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                    </div>
+                  </div>
+                </div>
+                <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="create-assignment">Create assignment
+                  <i class="material-icons right">send</i>
+                </button>
+              </form>
+            </div>
+          <div>
+          <script>
+            {% if messages %}
+                {% for message in messages %}
+                  {% if message.tags %}
+                    {% if message.tags == "error" %}
+                      Materialize.toast('{{ message }}', 2000, 'red');
+                    {% else %}
+                      Materialize.toast('{{ message }}', 2000, 'green');
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+            {% endif %}
+          </script>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

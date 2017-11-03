@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+      {% block title %}{% endblock %}
+    </title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script>
+        $(document).ready(function(){
+          $('ul.tabs').tabs();
+          $('.modal').modal();
+      });
+     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="https://use.fontawesome.com/109e5209ed.js"></script>
+     <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+  {% block navbar %}
+    <nav class="nav">
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo">AMS</a>
+        {% block menu %}
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            {% block assignments %}
+            <li><a href="/dashboard">Dashboard</a></li>
+            {% endblock %}
+            <li class="signout">
+                <a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i>Signout</a>
+            </li>
+          </ul>
+        {% endblock %}
+      </div>
+    </nav>
+  {% endblock %}
+  {% block content %}{% endblock %}
+</body>
+</html>

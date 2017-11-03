@@ -1,0 +1,72 @@
+{% extends "ams_app/base.html" %}
+{% block title %}Assignment Management System{% endblock %}
+{% block content%}
+
+<div class="container assignment-detail">
+  <div class="row single-assignment">
+    <div class="col s12">
+       <h4> Submission Details </h4>
+    </div>
+     <div class="col s12">
+       <p> Matriculation number: {{ single_submission.matric_number  }} </p>
+    </div>
+    <div class="col s12">
+      <p> Upload: {{ single_submission.upload }} </p> </div>
+    <div class="col s12">
+      <p> Submission Date: {{ single_submission.submitted_at }} </p> 
+    </div>
+  </div>
+  <form method="POST" action={% url 'delete_submission' id=submission_id %}>
+    {% csrf_token %}
+    <div class="edit-delete">
+      <a class="waves-effect waves-light btn modal-trigger" href="#modal1"><i class="material-icons right">edit</i>Edit</a>
+      <button class="btn waves-effect waves-light btn-delete" type="submit" name="delete-submission">Delete
+        <i class="material-icons right">delete</i>
+      </button>
+    </div>
+  </form>
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Edit Submission</h4>
+      <div class="edit-modal">
+        <div class="modal-container">
+          <form method="POST" action="{% url 'edit_submission' id=submission_id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+              <div class="file-field input-field col s12">
+                <div class="btn col s6">
+                  <span>File</span>
+                  {{ submission.upload }}
+                </div>
+                <div class="file-path-wrapper col s6">
+                  <input class="file-path validate" type="text" placeholder="Upload one or more files">
+                </div>
+              </div>
+            </div>
+            <button class="btn waves-effect waves-light modal-action modal-close" type="submit" name="edit-submission">Edit submission
+              <i class="material-icons right">send</i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <script>
+      {% if messages %}
+          {% for message in messages %}
+            {% if message.tags %}
+              {% if message.tags == "error" %}
+                Materialize.toast('{{ message }}', 2000, 'red');
+              {% else %}
+                Materialize.toast('{{ message }}', 2000, 'green');
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+      {% endif %}
+    </script>
+  </div>
+</div>
+
+{% endblock %}
