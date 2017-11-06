@@ -30,70 +30,93 @@
   }
   
   .signup-form {
-    transform:translateY(40%);
     width: 30%;
     margin: auto;
-    border-radius: 15px;
-    height: 40%;
-    background: #F3F9FB;
+    /* border-radius: 15px; */
+    /* height: 40%; */
+    background: #fff;
     padding: 0 10px;
+    box-shadow: 3px 2px 9px -2px;
+    z-index: 1000;
   }
   
-  .auth-container h4, .container h4 {
-    transform:translateY(370%);
+  .auth-container .auth-header {
     text-align: center;
-    margin-bottom: 50px;
+    margin-top: 5%;
     font-family:  serif;
     font-size: 50px;
     font-weight: 700;
-    color: #fff;
-    text-shadow: 0px 3px 0px #000;
+    color: #000;
+    text-shadow: 0px 3px 0px #ddd;
   }
   .btn {
-    width: 80%;
-    height: 50px;
+    width: 100%;
+    height: 3.5rem;
     border-radius: 0.25em;
-    background:#2EA95F;
-    margin-left: 10%;
+    background:#512DA8;
+    /* margin-left: 10%; */
   }
   
   .btn:hover {
-    background: #279540;
+    background: #673AB7;
   }
   
-  .tabs .tab a.active {
-    background: #F3F9FB;
+  .signup-tab {
+    height: 65vh;
+  }
+
+  .login-tab {
+    height: 35vh;
+  }
+
+  .tabs, .tabs .tab a.active {
+    background: #fff;
   }
   
-  .tabs {
-    background:#F3F9FB;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-  }
-  
-  .tabs .tab a.active {
-    color: #26a29a;
+  .tabs .tab a.active, .tabs .tab a:hover {
+    color: #9575CD;
   }
   
   .tabs .tab a {
-    color: #000;
+    color: #9e9e9e;
   }
   
   .auth-tabs {
     margin-bottom: 50px;
   }
   
-  input:not([type]), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.materialize-textarea  {
+  input[type=text]:not(.browser-default), 
+  input[type=password]:not(.browser-default), 
+  input[type=email]:not(.browser-default), 
+  input[type=number]:not(.browser-default), 
+  textarea.materialize-textarea  {
     margin-bottom: 40px;
+    border: 1px solid #ccc;
+    border-radius: 0.25em;
+    height: 3.5rem;
+    font-size: 1rem;
+  }
+
+  input[type=search]:not(.browser-default) {
+
   }
   
-  @keyframes animatedBackground {
-      from { background-position: 0 0; }
-      to { background-position: 100% 0; }
+  input[type=text]:not(.browser-default):focus, 
+  input[type=password]:not(.browser-default):focus, 
+  input[type=email]:not(.browser-default):focus {
+    border: 1px solid #9575CD;
+    box-shadow: none;
   }
   
+  input[type=password]:not(.browser-default):focus:not([readonly]), 
+  input[type=text]:not(.browser-default):focus:not([readonly]),
+  input[type=email]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: 1px solid #9575CD;
+    box-shadow: none;
+  }
+
   .tabs .indicator {
-    background-color: #26a29a;
+    background-color: #9575CD;
   }
   
   .auth-form {
@@ -106,10 +129,12 @@
   
   .input-search input[type=text] {
     position: relative;
-    border: 2px solid #D6D6D6;
-    border-radius: 50px;
+    border: 1px solid #ccc;
+    border-radius: 0.25em;
     padding: 0.5em 1em;
     color: #B8B6B6;
+    margin-left: 4%;
+    margin-right: 4%;
   }
   
   
@@ -127,16 +152,18 @@
   }
   
   .add-assignment {
-    transform: translate(300%, 80%);
+    float: right;
+    bottom: 40px;
+    background: #512DA8;
   }
   
   .signout a {
-     color: #34d058;
+     color: #fff;
   }
   
   .no-assignment {
     text-align: center;
-    margin: 4%;
+    margin: 2%;
   }
   
   .no-assignment p {
@@ -258,7 +285,7 @@
   }
   
   .pagination-div {
-    text-align: center;
+    text-align: left;
   }
   
   .pagination li {
@@ -268,9 +295,37 @@
     margin-top: 5px;
   }
   .nav {
-    background-color: #502900;
+    background-color: #512DA8;
+    padding-left: 40px;
+    padding-right: 40px;
   }
 
   #signup form select {
     display: block;
+    border: 1px solid #ccc;
+    height: 3.5rem;
+    border-radius: 0.25em;
+    color: #9e9e9e;
+  }
+
+  #signuo form select:focus {
+    border: 1px solid #9575CD;
+  }
+
+  ul .forgot-password{
+    list-style: none;
+    font-size: 1rem;
+    padding-top: 15px;
+  }
+
+  ul .forgot-password a {
+    color: #9575CD;    
+  }
+
+  label {
+    font-size: 1rem;
+  }
+
+  .search-row {
+    margin: auto;
   }

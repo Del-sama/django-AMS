@@ -6,37 +6,13 @@
 {% if assignments %}
   <div class="body">
     <div class="sub-body">
-      <div class="row">
-        <div class="col s2">
-          <a class="btn-floating btn-large waves-effect waves-light red add-assignment modal-trigger" href="#modal1"><i class="material-icons">add</i></a>
-        </div>
+      <div class="row search-row">
         <form method="GET">
-          <div class="input-field col s8 input-search">
+          <div class="input-field col s10 input-search">
             <i class="material-icons right">search</i>
             {{ search_form }}
           </div>
         </form>
-      </div>
-      <div class="pagination-div">
-        <ul class="pagination">
-          {% if assignments.has_previous %}
-            <li class="waves-effect"><a href="?page={{ assignments.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
-          {% else %}
-            <li class="disabled"><span><i class="material-icons">chevron_left</i></span></li>
-          {% endif %}
-          {% for i in assignments.paginator.page_range %}
-            {% if assignments.number == i %}
-              <li class=" waves-effect active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-            {% else %}
-              <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
-            {% endif %}
-          {% endfor %}
-          {% if assignments.has_next %}
-            <li class="waves-effect"><a href="?page={{ assignments.next_page_number }}"><i class="material-icons">chevron_right</i></a></li>
-          {% else %}
-            <li class="disabled"><span><i class="material-icons">chevron_right</i></span></li>
-          {% endif %}
-        </ul>
       </div>
       <div class="no-assignment">
           <table class="striped responsive-table table">
@@ -68,6 +44,30 @@
             {% endfor %}
           </tbody>
         </table>
+      </div>
+      <div class="col s2">
+        <a class="btn-floating btn-large waves-effect waves-light add-assignment modal-trigger" href="#modal1"><i class="material-icons">add</i></a>
+      </div>
+      <div class="pagination-div">
+        <ul class="pagination">
+          {% if assignments.has_previous %}
+            <li class="waves-effect"><a href="?page={{ assignments.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
+          {% else %}
+            <li class="disabled"><span><i class="material-icons">chevron_left</i></span></li>
+          {% endif %}
+          {% for i in assignments.paginator.page_range %}
+            {% if assignments.number == i %}
+              <li class=" waves-effect active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if assignments.has_next %}
+            <li class="waves-effect"><a href="?page={{ assignments.next_page_number }}"><i class="material-icons">chevron_right</i></a></li>
+          {% else %}
+            <li class="disabled"><span><i class="material-icons">chevron_right</i></span></li>
+          {% endif %}
+        </ul>
       </div>
     </div>
   </div>

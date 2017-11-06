@@ -112,7 +112,10 @@ def dashboard(request):
                     assignments = paginator.page(1)
                 except EmptyPage:
                     assignments = paginator.page(paginator.num_pages)
-
+                else:
+                    for error in feed.errors.values():
+                        messages(request, error)
+                    
                 context = {
                     "assignments": assignments,
                     "search_form": search_form,
@@ -210,6 +213,7 @@ def assignment_submissions(request, id):
     assignment_id = id
     if request.user.profile.role == 'Lecturer':
         search_form = forms.SubmissionSearchForm(request.GET or None)
+        feedback_form = forms.FeedbackForm(request.POST or None)
         grade_form = forms.GradeForm(request.POST or None)
         assignment = Assignment.objects.get(id=id)
         submissions = assignment.submissions.all().order_by('matric_number')
@@ -223,12 +227,21 @@ def assignment_submissions(request, id):
             submissions = paginator.page(paginator.num_pages)
 
         if request.method == 'POST':
-            if grade_form.is_valid():
+            if feedback_form.is_valid():
+                feedback = request.POST['feedback']
+                submission_id = request.POST['submit-feedback']
+                submission = Submission.objects.get(id=submission_id)
+                submission.feedback = feedback
+                submission.save()
+            elif grade_form.is_valid():
                 grade = request.POST['grade']
                 submission_id = request.POST['submit-grade']
                 submission = Submission.objects.get(id=submission_id)
                 submission.grade = grade
                 submission.save()
+            # else:
+            #     for error in feed.errors.values():
+            #         messages.error(request, error)
 
         if request.method == "GET":
             if search_form.is_valid():
@@ -256,6 +269,7 @@ def assignment_submissions(request, id):
                 "search_form": search_form,
                 "submissions": submissions,
                 "grade_form": grade_form,
+                "feedback_form": feedback_form,
                 "assignment_id": assignment_id
             }
         return render(request, 'ams_app/assignment-submissions.html', context=context)

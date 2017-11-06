@@ -143,3 +143,5 @@ STATIC_URL = '/static/'
 # APPEND_SLASH=True
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/uploads/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

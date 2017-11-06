@@ -44,6 +44,7 @@
                   <th>Upload</th>
                   <th>Date submitted</th>
                   <th>Grade</th>
+                  <th>Feedback</th>
               </tr>
             </thead>
 
@@ -62,6 +63,17 @@
                       <!-- {{ grade_form }} -->
                     {% endif %}
                   </td>
+                  <td>
+                    {% if submission.feedback %}
+                      {{ submission.feedback }}
+                    {% else %}
+                      <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ feedback_form.feedback }}
+                        <button type="submit" name="submit-feedback" value="{{ submission.id }}">Submit</button>
+                      </form>
+                    {% endif %}
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -76,7 +88,7 @@
           <h4>Grade Submission</h4>
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ grade_form }}
+            {{ grade_form.grade }}
             <button type="submit" name="submit-grade" value="{{ submission.id }}">Submit</button>
           </form>
         </div>
