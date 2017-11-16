@@ -23,10 +23,10 @@ def sign_up(request):
             email=user_form.cleaned_data["email"]
             password=user_form.cleaned_data["password"]
             if User.objects.filter(username=username).exists():
-                messages.error(request, "User with this username already exists")
+                messages.error(request, "A user with that username already exists.")
                 return redirect('/')
             elif User.objects.filter(email=email).exists():
-                messages.error(request, "User with this email address already exists")
+                messages.error(request, "A user with that email address already exists.")
                 return redirect('/')
             else:
                 user = User.objects.create_user(
@@ -63,6 +63,7 @@ def login_user(request):
                 return redirect('/dashboard')
             else:
                 messages.error(request, 'Username or password is incorrect')
+                return redirect('/')
         else:
             for error in login_form.errors.values():
                 messages.error(request, error)
@@ -76,7 +77,6 @@ def login_user(request):
 @login_required
 def logout_user(request):
     logout(request)
-    messages.success(request, 'User was successfully logged out.')
     return redirect('/')
 
 
@@ -86,16 +86,17 @@ def dashboard(request):
     search_form = forms.AssignmentSearchForm(request.GET or None)
     user_id = request.user.id
     user = request.user.profile
-    assignments= request.user.assignments.all()
+    assignments = request.user.assignments.all()
+    assignments_list = assignments
     if user.role == 'Lecturer':
-        paginator = Paginator(assignments, 10)
+        paginator = Paginator(assignments_list, 10)
         page = request.GET.get('page')
         try:
-            assignments = paginator.page(page)
+            assignments_list = paginator.page(page)
         except PageNotAnInteger:
-            assignments = paginator.page(1)
+            assignments_list = paginator.page(1)
         except EmptyPage:
-            assignments = paginator.page(paginator.num_pages)
+            assignments_list = paginator.page(paginator.num_pages)
 
         if request.method == 'GET':
             if search_form.is_valid():
@@ -112,9 +113,9 @@ def dashboard(request):
                     assignments = paginator.page(1)
                 except EmptyPage:
                     assignments = paginator.page(paginator.num_pages)
-                else:
-                    for error in feed.errors.values():
-                        messages(request, error)
+            else:
+                for error in search_form.errors.values():
+                    messages(request, error)
                     
                 context = {
                     "assignments": assignments,
@@ -130,15 +131,16 @@ def dashboard(request):
         return render(request, 'ams_app/dashboard.html', context=context)
     else:
         submissions = request.user.submissions.all()
+        submissions_list = submissions
         search_form = forms.SubmissionSearchForm(request.GET or None)
-        paginator = Paginator(submissions, 10)
+        paginator = Paginator(submissions_list, 10)
         page = request.GET.get('page')
         try:
-            submissions = paginator.page(page)
+            submissions_list = paginator.page(page)
         except PageNotAnInteger:
-            submissions = paginator.page(1)
+            submissions_list = paginator.page(1)
         except EmptyPage:
-            submissions = paginator.page(paginator.num_pages)
+            submissions_list = paginator.page(paginator.num_pages)
 
         if request.method == 'GET':
             if search_form.is_valid():
@@ -180,12 +182,18 @@ def create_assignment(request):
                 new_data = Assignment.objects.last()
                 messages.success(request, 'Assignment was successfully created.')
                 return redirect('/dashboard')
+            else:
+                for error in assignment_form.errors.values():
+                    messages.error(request, error)
         context = {
             "assignment": assignment_form
         }
         return render(request, "ams_app/dashboard.html", context=context)
     else:
         messages.error(request, 'Only Lecturer accounts can create assignments')
+        context = {
+            "assignment": assignment_form
+        }
         return render(request, "ams_app/dashboard.html", context=context)
 
 
@@ -217,14 +225,15 @@ def assignment_submissions(request, id):
         grade_form = forms.GradeForm(request.POST or None)
         assignment = Assignment.objects.get(id=id)
         submissions = assignment.submissions.all().order_by('matric_number')
-        paginator = Paginator(submissions, 10)
+        submissions_list = submissions
+        paginator = Paginator(submissions_list, 10)
         page = request.GET.get('page')
         try:
-            submissions = paginator.page(page)
+            submissions_list = paginator.page(page)
         except PageNotAnInteger:
-            submissions = paginator.page(1)
+            submissions_list = paginator.page(1)
         except EmptyPage:
-            submissions = paginator.page(paginator.num_pages)
+            submissions_list = paginator.page(paginator.num_pages)
 
         if request.method == 'POST':
             if feedback_form.is_valid():
@@ -281,6 +290,7 @@ def delete_assignment(request, id):
     user_id = assignment.user_id
     if user_id == request.user.id:
         assignment.delete()
+        messages.success(request, "Assignment was successfully deleted")
         return redirect('/dashboard')
     else:
         context = {
@@ -304,7 +314,8 @@ def edit_assignment(request, id):
         }
     assignment_form = forms.AssignmentForm(request.POST, request.FILES, instance=assignment, initial=initial)
     if request.method == "POST":
-        if assignment_form .is_valid():
+
+        if assignment_form.is_valid():
             current_user = request.user.id
             if current_user == user_id:
                 assignment_form .save()
@@ -313,11 +324,15 @@ def edit_assignment(request, id):
                 return redirect('assignment_detail', id=new_data.id)
             else:
                 messages.error(request, "You are not authorized to carry out this operation")
+        else:
+            for error in assignment_form.errors.values():
+                messages.error(request, error)
+            
     context = {
         "assignment": assignment_form,
         "assignment_id": id
     }
-    return render(request, "ams_app/assignment-edit.html", context=context)
+    return render(request, "ams_app/assignment-detail.html", context=context)
 
 
 @login_required
@@ -331,7 +346,7 @@ def pre_submission(request, id):
                 request.session['passcode'] = passcode
                 return redirect('assignment_submission', id=id)
             else:
-                messages.error(request, "passcode does not match")
+                messages.error(request, "Passcode does not match")
         else:
             for error in pass_form.errors.values():
                 messages.error(request, error)

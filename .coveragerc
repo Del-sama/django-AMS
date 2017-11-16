@@ -1,0 +1,12 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+
+[report]
+omit = 
+    /Users/andeladeveloper/.Envs/django_ams/lib/python3.6/site-packages/*
+    ams_app/migrations/*
+    django_ams/*
+    manage.py
+
+ignore_errors = True

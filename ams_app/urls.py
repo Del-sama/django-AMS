@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
+
 from ams_app import views
 
 urlpatterns = [
-    url(r'^assignments/add$', views.create_assignment, name='add_assignment'),
+    url(r'^assignments/$', views.create_assignment, name='add_assignment'),
     url(r'^assignments/(?P<id>[-\w]+)/pass$', views.pre_submission,
         name='pre_submission'),
     url(r'^assignments/(?P<id>[-\w]+)/submission$', views.submit_assignment,
@@ -45,6 +46,6 @@ urlpatterns = [
         auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
     url(r'^login$', views.login_user, name='login'),
-    url(r'^logout$', views.logout_user),
+    url(r'^logout$', views.logout_user, name='logout'),
     url(r'^$', views.sign_up),
 ]
