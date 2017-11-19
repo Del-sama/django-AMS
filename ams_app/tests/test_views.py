@@ -11,7 +11,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 class amsappViewTest(TestCase):
 
     def setUp(self):
-        self.first_file = SimpleUploadedFile("file.txt", b"file_content")
+        self.sample_file = SimpleUploadedFile("file.txt", b"file_content")
         self.client = Client()
         self.user = User.objects.create_user(
             username="test",
@@ -45,7 +45,7 @@ class amsappViewTest(TestCase):
         self.assignment.save()
 
         self.submission = Submission.objects.create(
-            upload=self.first_file,
+            upload=self.sample_file,
             user_id=self.student.id,
             assignment_id=self.assignment.id,
             matric_number='15907984'
@@ -163,7 +163,7 @@ class amsappViewTest(TestCase):
             reverse('dashboard'), {
                 'q': '15907984'
             })
-        expected_html = '<td><a href="/submissions/{}">15907984</a></td>'.format(self.submission.id)
+        expected_html = '<td><a href="/submissions/{}/edit">15907984</a></td>'.format(self.submission.id)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, expected_html)
 
@@ -354,3 +354,32 @@ class amsappViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'ams_app/submission-detail.html')
 
+    def test_edit_submission(self):
+        test_file = SimpleUploadedFile("file.txt", b"file_content")
+        self.login = self.client.login(
+            username="student",
+            password="password"
+        )
+        
+        response = self.client.post(
+            reverse('submission_detail', kwargs ={'id': self.submission.id}),
+            {
+                'upload': test_file
+                }, follow=True)
+
+        edited_submission = Submission.objects.get(id=self.submission.id)
+        message = list(response.context.get('messages'))[0]            
+        self.assertNotEqual(self.submission.upload, edited_submission.upload)
+        self.assertTrue("Submission was successfully edited" in message.message)
+
+    def test_unauthorized_edit_submission(self):
+        test_file = SimpleUploadedFile("file.txt", b"file_content")
+        self.assertEqual(self.login, True) 
+        response = self.client.post(
+            reverse('submission_detail', kwargs ={'id': self.submission.id}),{
+                'upload': test_file
+                }, follow=True)
+        edited_submission = Submission.objects.get(id=self.submission.id)
+        message = list(response.context.get('messages'))[0]              
+        self.assertEqual(self.submission.upload, edited_submission.upload)
+        self.assertTrue("You are not authorized to carry out this operation" in message.message)

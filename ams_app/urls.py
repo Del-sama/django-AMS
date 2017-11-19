@@ -28,8 +28,6 @@ urlpatterns = [
         name='submissions'),
     url(r'^assignments/(?P<id>[-\w]+)/$', views.assignment_detail,
         name='assignment_detail'),
-    url(r'^submissions/(?P<id>[-\w]+)/$', views.submission_detail,
-        name='submission_detail'),
     url(r'^assignments/(?P<id>[-\w]+)/delete$', views.delete_assignment,
         name='delete_assignment'),
     url(r'^assignments/(?P<id>[-\w]+)/edit$', views.edit_assignment,
@@ -37,7 +35,7 @@ urlpatterns = [
     url(r'^submissions/(?P<id>[-\w]+)/delete$', views.delete_submission,
         name='delete_submission'),
     url(r'^submissions/(?P<id>[-\w]+)/edit$', views.edit_submission,
-        name='edit_submission'),
+        name='submission_detail'),
     url(r'^dashboard$', views.dashboard, name='dashboard'),
     # django auth urls
     url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),

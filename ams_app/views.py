@@ -248,9 +248,6 @@ def assignment_submissions(request, id):
                 submission = Submission.objects.get(id=submission_id)
                 submission.grade = grade
                 submission.save()
-            # else:
-            #     for error in feed.errors.values():
-            #         messages.error(request, error)
 
         if request.method == "GET":
             if search_form.is_valid():
@@ -429,7 +426,6 @@ def edit_submission(request, id):
         }
     submission_form = forms.SubmissionForm(request.POST, request.FILES, instance=submission, initial=initial)
     if request.method == "POST":
-        import pdb; pdb.set_trace()
         if assignment.due_date > datetime.date.today():
             if submission_form.is_valid():
                 current_user = request.user.id
@@ -440,18 +436,15 @@ def edit_submission(request, id):
                     return redirect('submission_detail', id=new_data.id)
                 else:
                     messages.error(request, "You are not authorized to carry out this operation")
+            else:
+                for error in submission_form.values():
+                    messages.error(request, error)
+                
         else:
             messages.error(request, "The due date for this assignment has passed")
-        context = {
-            "submission": submission_form,
-            "submission_id": id,
-            "single_submission": submission
-        }
-        return render(request, "ams_app/submission-detail.html", context=context)
-    else:
-        context = {
-            "submission": submission_form,
-            "submission_id": id,
-            "single_submission": submission
-        }
-        return render(request, "ams_app/past_due.html", context=context)
+    context = {
+        "submission": submission_form,
+        "submission_id": id,
+        "single_submission": submission
+    }
+    return render(request, "ams_app/submission-detail.html", context=context)

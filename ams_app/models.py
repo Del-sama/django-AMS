@@ -30,7 +30,7 @@ class Profile(models.Model):
 class Assignment(models.Model):
     title = models.CharField(max_length=255)
     passcode = models.CharField(max_length=100, default=unique_passcode)
-    upload = models.FileField(upload_to='assignments/', null=True)
+    upload = models.FileField(upload_to='assignments/', null=True, default="No file uploaded")
     due_date = models.DateField()
     created_at = models.DateField(auto_now_add=True)
     last_updated = models.DateField(auto_now=True)
@@ -58,5 +58,5 @@ class Submission(models.Model):
         on_delete=models.CASCADE,
         related_name='submissions'
     )
-    grade = models.CharField(max_length=100, null=True, blank=True)
-    feedback = models.CharField(max_length=255, null=True, blank=True)
+    grade = models.CharField(max_length=100, null=True, blank=True, default="No grade yet")
+    feedback = models.CharField(max_length=255, null=True, blank=True, default="No feedback yet")
