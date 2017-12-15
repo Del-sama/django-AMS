@@ -83,6 +83,9 @@ class AssignmentSearchForm(forms.Form):
 
     class Meta:
         fields = "q"
+        errorlist = {
+            'q': '',
+        }
 
 
 class SubmissionSearchForm(forms.Form):
@@ -97,3 +100,10 @@ class GradeForm(forms.Form):
 
     class Meta:
         fields = ['grade']
+
+
+class FeedbackForm(forms.Form):
+    feedback = forms.CharField()
+    
+    class Meta:
+        fields = ['feedback']

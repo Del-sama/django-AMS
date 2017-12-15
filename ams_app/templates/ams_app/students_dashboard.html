@@ -14,6 +14,33 @@
           </div>
         </form>
       </div>
+      <div class="no-assignment">
+          <table class="striped responsive-table table">
+          <thead>
+            <tr>
+                <th>#</th>
+                <th>Matriculation number</th>
+                <th>Upload</th>
+                <th>Date submitted</th>
+                <th>Grade</th>
+                <th>Feedback</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for submission in submissions %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ assignment.title }}</td>
+              <td><a href="{% url 'submission_detail' id=submission.id %}">{{ submission.upload }}</a></td>
+              <td>{{ submission.submitted_at }}</td>
+              <td>{{ submission.grade}}</td>
+              <td>{{ submission.feedback}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
       <div class="pagination-div">
         <ul class="pagination">
           {% if submissions.has_previous %}
@@ -34,31 +61,6 @@
             <li class="disabled"><span><i class="material-icons">chevron_right</i></span></li>
           {% endif %}
         </ul>
-      </div>
-      <div class="no-assignment">
-          <table class="striped responsive-table table">
-          <thead>
-            <tr>
-                <th>#</th>
-                <th>Matriculation number</th>
-                <th>Upload</th>
-                <th>Date submitted</th>
-                <th>Grade</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for submission in submissions %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td><a href="/submissions/{{ submission.id }}">{{ submission.matric_number }}</a></td>
-              <td>{{ submission.upload }}</td>
-              <td>{{ submission.submitted_at }}</td>
-              <td>{{ submission.grade}}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
       </div>
     </div>
   </div>

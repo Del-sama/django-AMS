@@ -14,6 +14,53 @@
             </div>
           </form>
         </div>
+        <div class="no-assignment">
+           <table class="striped responsive-table table">
+            <thead>
+              <tr>
+                  <th>#</th>
+                  <th>Matriculation number</th>
+                  <th>Upload</th>
+                  <th>Date submitted</th>
+                  <th>Grade</th>
+                  <th>Feedback</th>
+              </tr>
+            </thead>
+
+            <tbody>
+                {% for submission in submissions %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ submission.matric_number }}</td>
+                  <td>{{ submission.upload }}</td>
+                  <td>{{ submission.submitted_at }}</td>
+                  <td>
+                    {% if submission.grade != 'No grade yet' %}
+                      {{ submission.grade }}
+                    {% else %}
+                      <a class="modal-trigger" href="#modal-{{ submission.id }}">Grade</a>
+                      <!-- {{ grade_form }} -->
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if submission.feedback != 'No feedback yet' %}
+                      {{ submission.feedback }}
+                    {% else %}
+                      <form method="POST" enctype="multipart/form-data" class="feedback-form">
+                        {% csrf_token %}
+                        {{ feedback_form.feedback }}
+                        <button type="submit" name="submit-feedback" value="{{ submission.id }}">
+                          <i class="material-icons">send</i>
+                        </button>
+                      </form>
+                      </td>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+        </div>
         <div class="pagination-div">
           <ul class="pagination">
             {% if submissions.has_previous %}
@@ -35,38 +82,6 @@
             {% endif %}
           </ul>
         </div>
-        <div class="no-assignment">
-           <table class="striped responsive-table table">
-            <thead>
-              <tr>
-                  <th>#</th>
-                  <th>Matriculation number</th>
-                  <th>Upload</th>
-                  <th>Date submitted</th>
-                  <th>Grade</th>
-              </tr>
-            </thead>
-
-            <tbody>
-                {% for submission in submissions %}
-                <tr>
-                  <td>{{ forloop.counter }}</td>
-                  <td>{{ submission.matric_number }}</td>
-                  <td>{{ submission.upload }}</td>
-                  <td>{{ submission.submitted_at }}</td>
-                  <td>
-                    {% if submission.grade %}
-                      {{ submission.grade }}
-                    {% else %}
-                      <a class="modal-trigger" href="#modal-{{ submission.id }}">Grade</a>
-                      <!-- {{ grade_form }} -->
-                    {% endif %}
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-          </table>
-        </div>
       </div>
     </div>
     {% for submission in submissions %}
@@ -74,10 +89,12 @@
       <div id="modal-{{ submission.id }}" class="modal">
         <div class="modal-content">
           <h4>Grade Submission</h4>
-          <form method="POST" enctype="multipart/form-data">
+          <form method="POST" enctype="multipart/form-data" class="feedback-form">
             {% csrf_token %}
-            {{ grade_form }}
-            <button type="submit" name="submit-grade" value="{{ submission.id }}">Submit</button>
+            {{ grade_form.grade }}
+            <button type="submit" name="submit-grade" value="{{ submission.id }}">
+              <i class="material-icons">send</i>
+            </button>
           </form>
         </div>
       </div>

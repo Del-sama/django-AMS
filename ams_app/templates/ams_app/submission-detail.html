@@ -31,7 +31,7 @@
       <h4>Edit Submission</h4>
       <div class="edit-modal">
         <div class="modal-container">
-          <form method="POST" action="{% url 'edit_submission' id=submission_id %}" enctype="multipart/form-data">
+          <form method="POST" action="{% url 'submission_detail' id=submission_id %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
               <div class="file-field input-field col s12">
