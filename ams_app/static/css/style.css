@@ -62,7 +62,7 @@
   }
   
   .signup-tab {
-    height: 65vh;
+    height: 70vh;
   }
 
   .login-tab {
@@ -89,7 +89,7 @@
   input[type=password]:not(.browser-default), 
   input[type=email]:not(.browser-default), 
   input[type=number]:not(.browser-default), 
-  textarea.materialize-textarea  {
+  textarea.materialize-textarea {
     margin-bottom: 40px;
     border: 1px solid #ccc;
     border-radius: 0.25em;
@@ -133,13 +133,14 @@
     border-radius: 0.25em;
     padding: 0.5em 1em;
     color: #B8B6B6;
-    margin-left: 4%;
-    margin-right: 4%;
+    margin: auto;
+    height: 2.5rem;
+    top: -30px;
   }
   
   
   .input-search i {
-    transform: translateY(190%);
+    transform: translateY(50%);
     color: #B8B6B6;
   }
   
@@ -155,6 +156,7 @@
     float: right;
     bottom: 40px;
     background: #512DA8;
+    margin-top: 20px;
   }
   
   .signout a {
@@ -172,7 +174,7 @@
   }
   
   .table {
-    box-shadow: -9px -7px 34px 2px #CACCCD;
+    box-shadow: 3px 2px 9px -2px;
   }
   
   .assignment-container {
@@ -247,12 +249,13 @@
   
   .assignment-pass input[type=text] {
     border: 1px solid #9e9e9e;
-    border-radius: 10px;
+    border-radius: 0.5em;
     padding: 5px;
   }
   
    .assignment-pass h4 {
      transform: none;
+     text-align: center;
    }
   
    .assignment-pass input[type=text]:focus {
@@ -273,6 +276,7 @@
     border-left: 1px solid #CACCCD;
     padding-left: 60px;
     padding-right: 60px;
+    height: 600px;
   }
   
   .submit-assignment .border-right {
@@ -303,22 +307,23 @@
   #signup form select {
     display: block;
     border: 1px solid #ccc;
-    height: 3.5rem;
+    height: 3.8rem;
     border-radius: 0.25em;
     color: #9e9e9e;
+    margin-bottom: 40px;
   }
 
   #signuo form select:focus {
     border: 1px solid #9575CD;
   }
 
-  ul .forgot-password{
+  ul .forgot-password-link{
     list-style: none;
     font-size: 1rem;
     padding-top: 15px;
   }
 
-  ul .forgot-password a {
+  ul .forgot-password-link a {
     color: #9575CD;    
   }
 
@@ -328,4 +333,51 @@
 
   .search-row {
     margin: auto;
+  }
+
+  .edit-delete i.right {
+    margin-left: 0;
+  }
+
+  .feedback-form input[type=text]:not(.browser-default) {
+    margin-bottom: 0;
+    height: 3.1rem;
+    width: 70%;
+  }
+
+  .feedback-form button {
+    height: 3.3rem;
+    width: 20%;
+    background: #512DA8; 
+    position: relative;
+    top: 3px;
+    left: -5px;
+    border-radius: 0.25em;
+  }
+
+  .feedback-form button i{
+    color: #fff;
+  }
+
+  .input-field.col label {
+    padding: 5px;
+  }
+
+  .assignment-edit .input-field.col label {
+    padding: 0;
+  }
+
+  .forgot-password {
+    width: 50%;
+    height: 50%;
+    margin: 10% auto;
+  }
+
+  .forgot-password h4 {
+    text-align: center;
+  }
+
+  .forgot-password-text p {
+    font-size: 18px;
+
   }

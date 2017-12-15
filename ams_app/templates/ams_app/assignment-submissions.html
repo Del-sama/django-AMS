@@ -14,27 +14,6 @@
             </div>
           </form>
         </div>
-        <div class="pagination-div">
-          <ul class="pagination">
-            {% if submissions.has_previous %}
-              <li class="waves-effect"><a href="?page={{ submissions.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
-            {% else %}
-              <li class="disabled"><span><i class="material-icons">chevron_left</i></span></li>
-            {% endif %}
-            {% for i in submissions.paginator.page_range %}
-              {% if submissions.number == i %}
-                <li class=" waves-effect active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-              {% else %}
-                <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
-              {% endif %}
-            {% endfor %}
-            {% if submissions.has_next %}
-              <li class="waves-effect"><a href="?page={{ submissions.next_page_number }}"><i class="material-icons">chevron_right</i></a></li>
-            {% else %}
-              <li class="disabled"><span><i class="material-icons">chevron_right</i></span></li>
-            {% endif %}
-          </ul>
-        </div>
         <div class="no-assignment">
            <table class="striped responsive-table table">
             <thead>
@@ -56,7 +35,7 @@
                   <td>{{ submission.upload }}</td>
                   <td>{{ submission.submitted_at }}</td>
                   <td>
-                    {% if submission.grade %}
+                    {% if submission.grade != 'No grade yet' %}
                       {{ submission.grade }}
                     {% else %}
                       <a class="modal-trigger" href="#modal-{{ submission.id }}">Grade</a>
@@ -64,20 +43,44 @@
                     {% endif %}
                   </td>
                   <td>
-                    {% if submission.feedback %}
+                    {% if submission.feedback != 'No feedback yet' %}
                       {{ submission.feedback }}
                     {% else %}
-                      <form method="POST" enctype="multipart/form-data">
+                      <form method="POST" enctype="multipart/form-data" class="feedback-form">
                         {% csrf_token %}
                         {{ feedback_form.feedback }}
-                        <button type="submit" name="submit-feedback" value="{{ submission.id }}">Submit</button>
+                        <button type="submit" name="submit-feedback" value="{{ submission.id }}">
+                          <i class="material-icons">send</i>
+                        </button>
                       </form>
+                      </td>
                     {% endif %}
                   </td>
                 </tr>
                 {% endfor %}
               </tbody>
           </table>
+        </div>
+        <div class="pagination-div">
+          <ul class="pagination">
+            {% if submissions.has_previous %}
+              <li class="waves-effect"><a href="?page={{ submissions.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
+            {% else %}
+              <li class="disabled"><span><i class="material-icons">chevron_left</i></span></li>
+            {% endif %}
+            {% for i in submissions.paginator.page_range %}
+              {% if submissions.number == i %}
+                <li class=" waves-effect active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if submissions.has_next %}
+              <li class="waves-effect"><a href="?page={{ submissions.next_page_number }}"><i class="material-icons">chevron_right</i></a></li>
+            {% else %}
+              <li class="disabled"><span><i class="material-icons">chevron_right</i></span></li>
+            {% endif %}
+          </ul>
         </div>
       </div>
     </div>
@@ -86,10 +89,12 @@
       <div id="modal-{{ submission.id }}" class="modal">
         <div class="modal-content">
           <h4>Grade Submission</h4>
-          <form method="POST" enctype="multipart/form-data">
+          <form method="POST" enctype="multipart/form-data" class="feedback-form">
             {% csrf_token %}
             {{ grade_form.grade }}
-            <button type="submit" name="submit-grade" value="{{ submission.id }}">Submit</button>
+            <button type="submit" name="submit-grade" value="{{ submission.id }}">
+              <i class="material-icons">send</i>
+            </button>
           </form>
         </div>
       </div>

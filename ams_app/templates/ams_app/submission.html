@@ -17,7 +17,7 @@
         <div class="col submit-assignments12">
           <p> Course Title: {{ assignment.course_title }} <p> </div>
         <div class="col s12">
-          <p> Upload: {{ assignment.upload }} </p> </div>
+          <p> Upload: <a href="{{ assignment.upload.url }}"> {{ assignment.upload }}  </a> </p> </div>
         <div class="col s12">
           <p> Due Date: {{ assignment.due_date }} </p> </div>
       </div>

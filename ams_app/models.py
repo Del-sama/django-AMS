@@ -44,7 +44,7 @@ class Assignment(models.Model):
 
 
 class Submission(models.Model):
-    matric_number = models.CharField(max_length=12)
+    matric_number = models.CharField(max_length=100)
     upload = models.FileField(upload_to='submissions/')
     submitted_at = models.DateField(auto_now=True)
     last_updated = models.DateField(auto_now=True)

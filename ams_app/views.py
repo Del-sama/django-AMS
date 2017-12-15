@@ -89,6 +89,7 @@ def dashboard(request):
     assignments = request.user.assignments.all()
     assignments_list = assignments
     if user.role == 'Lecturer':
+        import pdb; pdb.set_trace()
         paginator = Paginator(assignments_list, 10)
         page = request.GET.get('page')
         try:
@@ -131,6 +132,10 @@ def dashboard(request):
         return render(request, 'ams_app/dashboard.html', context=context)
     else:
         submissions = request.user.submissions.all()
+        assignment = None
+        for submission in submissions:
+            assignment_id = submission.assignment_id
+            assignment = Assignment.objects.get(id=assignment_id)
         submissions_list = submissions
         search_form = forms.SubmissionSearchForm(request.GET or None)
         paginator = Paginator(submissions_list, 10)
@@ -165,7 +170,8 @@ def dashboard(request):
                 return render(request, 'ams_app/students_dashboard.html', context=context)
         context = {
             "search_form": search_form,
-            "submissions": submissions
+            "submissions": submissions,
+            "assignment": assignment
         }
         return render(request, 'ams_app/students_dashboard.html', context=context)
 
@@ -315,7 +321,9 @@ def edit_assignment(request, id):
         if assignment_form.is_valid():
             current_user = request.user.id
             if current_user == user_id:
-                assignment_form .save()
+                assignment_form.save()
+                assignment.last_updated = datetime.date.today()
+                assignment.save()
                 messages.success(request, 'Assignment was successfully edited.')
                 new_data = Assignment.objects.last()
                 return redirect('assignment_detail', id=new_data.id)
@@ -332,8 +340,9 @@ def edit_assignment(request, id):
     return render(request, "ams_app/assignment-detail.html", context=context)
 
 
-@login_required
 def pre_submission(request, id):
+    if not request.user.is_authenticated():
+      return redirect('/')  
     pass_form = forms.PassForm(request.POST or None)
     if request.method == "POST":
         assignment = Assignment.objects.get(id=id)
@@ -431,6 +440,8 @@ def edit_submission(request, id):
                 current_user = request.user.id
                 if current_user == user_id:
                     submission_form.save()
+                    submission.last_updated = datetime.date.today()
+                    submission.save()
                     messages.success(request, 'Submission was successfully edited.')
                     new_data = Submission.objects.last()
                     return redirect('submission_detail', id=new_data.id)
