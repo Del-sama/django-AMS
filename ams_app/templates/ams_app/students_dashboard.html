@@ -19,7 +19,8 @@
           <thead>
             <tr>
                 <th>#</th>
-                <th>Matriculation number</th>
+                <th>Assignment</th>
+                <th>Course code</th>
                 <th>Upload</th>
                 <th>Date submitted</th>
                 <th>Grade</th>
@@ -31,7 +32,8 @@
             {% for submission in submissions %}
             <tr>
               <td>{{ forloop.counter }}</td>
-              <td>{{ assignment.title }}</td>
+              <td>{{ submission.assignment.title }}</td>
+              <td>{{ submission.assignment.course_code }}</td>
               <td><a href="{% url 'submission_detail' id=submission.id %}">{{ submission.upload }}</a></td>
               <td>{{ submission.submitted_at }}</td>
               <td>{{ submission.grade}}</td>

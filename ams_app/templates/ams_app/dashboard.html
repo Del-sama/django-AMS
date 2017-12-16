@@ -31,16 +31,16 @@
 
           <tbody>
             {% for assignment in assignments %}
-            <tr>
-              <td>{{ forloop.counter }}</td>
-              <td><a href="/assignments/{{ assignment.id }}">{{ assignment.title }}</a></td>
-              <td>{{ assignment.upload }}</td>
-              <td>{{ assignment.created_at }}</td>
-              <td>{{ assignment.due_date }}</td>
-              <td>{{ assignment.course_code }}</td>
-              <td>{{ assignment.course_title }}</td>
-              <td><a href="/assignments/{{ assignment.id }}/submissions">{{ assignment.submissions.count }}</a></td>
-            </tr>
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><a href="/assignments/{{ assignment.id }}">{{ assignment.title }}</a></td>
+                <td>{{ assignment.upload }}</td>
+                <td>{{ assignment.created_at }}</td>
+                <td>{{ assignment.due_date }}</td>
+                <td>{{ assignment.course_code }}</td>
+                <td>{{ assignment.course_title }}</td>
+                <td><a href="/assignments/{{ assignment.id }}/submissions">{{ assignment.submissions.count }}</a></td>
+              </tr>
             {% endfor %}
           </tbody>
         </table>
@@ -49,25 +49,27 @@
         <a class="btn-floating btn-large waves-effect waves-light add-assignment modal-trigger" href="#modal1"><i class="material-icons">add</i></a>
       </div>
       <div class="pagination-div">
-        <ul class="pagination">
-          {% if assignments.has_previous %}
-            <li class="waves-effect"><a href="?page={{ assignments.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
-          {% else %}
-            <li class="disabled"><span><i class="material-icons">chevron_left</i></span></li>
-          {% endif %}
-          {% for i in assignments.paginator.page_range %}
-            {% if assignments.number == i %}
-              <li class=" waves-effect active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% if assignments.has_other_pages %}
+          <ul class="pagination">
+            {% if assignments.has_previous %}
+              <li class="waves-effect"><a href="?page={{ assignments.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
             {% else %}
-              <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
+              <li class="disabled"><span><i class="material-icons">chevron_left</i></span></li>
             {% endif %}
-          {% endfor %}
-          {% if assignments.has_next %}
-            <li class="waves-effect"><a href="?page={{ assignments.next_page_number }}"><i class="material-icons">chevron_right</i></a></li>
-          {% else %}
-            <li class="disabled"><span><i class="material-icons">chevron_right</i></span></li>
-          {% endif %}
-        </ul>
+            {% for i in assignments.paginator.page_range %}
+              {% if assignments.number == i %}
+                <li class=" waves-effect active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+                <li class="waves-effect"><a href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if assignments.has_next %}
+              <li class="waves-effect"><a href="?page={{ assignments.next_page_number }}"><i class="material-icons">chevron_right</i></a></li>
+            {% else %}
+              <li class="disabled"><span><i class="material-icons">chevron_right</i></span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
       </div>
     </div>
   </div>
