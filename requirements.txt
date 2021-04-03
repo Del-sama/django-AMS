@@ -1,7 +1,7 @@
 bs4==0.0.1
 certifi==2017.7.27.1
 chardet==3.0.4
-Django==1.11.28
+Django==1.11.29
 idna==2.6
 olefile==0.44
 Pillow==8.1.1
