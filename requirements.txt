@@ -1,5 +1,5 @@
 bs4==0.0.1
-certifi==2017.7.27.1
+certifi==2022.12.7
 chardet==3.0.4
 Django==1.11.28
 idna==2.6
